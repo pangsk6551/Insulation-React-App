@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/Insulation-React-App/static/css/main.361d4fe8.css",
+    "main.js": "/Insulation-React-App/static/js/main.28ea934f.js",
+    "static/js/453.a4dc7625.chunk.js": "/Insulation-React-App/static/js/453.a4dc7625.chunk.js",
+    "index.html": "/Insulation-React-App/index.html",
+    "main.361d4fe8.css.map": "/Insulation-React-App/static/css/main.361d4fe8.css.map",
+    "main.28ea934f.js.map": "/Insulation-React-App/static/js/main.28ea934f.js.map",
+    "453.a4dc7625.chunk.js.map": "/Insulation-React-App/static/js/453.a4dc7625.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.361d4fe8.css",
+    "static/js/main.28ea934f.js"
+  ]
+}
