@@ -1,0 +1,182 @@
+/* --- GLOBAL RESET --- */
+body {
+  background-color: #f8f9fa;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+.app-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background: white;
+  min-height: 100vh;
+  box-shadow: 0 0 20px rgba(0,0,0,0.05);
+}
+
+/* --- SUPERLON HEADER BRANDING --- */
+.header-section {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.superlon-logo {
+    font-family: "Arial Black", Arial, sans-serif;
+    font-style: italic;
+    font-weight: 900;
+    font-size: 2.5rem;
+    color: #0056b8;
+    margin: 0;
+    line-height: 1;
+    letter-spacing: -1px;
+}
+
+.reg-mark {
+    font-family: Arial, sans-serif;
+    font-style: normal;
+    font-size: 1rem;
+    vertical-align: top;
+    /* UPDATED: Increased margin to push it to the right */
+    margin-left: 8px;
+}
+
+.header-line {
+    width: 60%;
+    height: 1px;
+    background-color: #e0e0e0;
+    margin: 8px auto;
+}
+
+.subtitle {
+    font-family: Arial, sans-serif;
+    color: #0056b8;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 0;
+    letter-spacing: 1px;
+}
+
+/* --- CONTROLS --- */
+.control-card {
+    background: #f1f5f9;
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 20px;
+}
+
+.file-input {
+    display: none;
+}
+
+.file-label {
+    display: block;
+    text-align: center;
+    background: white;
+    padding: 12px;
+    border: 1px dashed #0056b8;
+    color: #0056b8;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 15px;
+    transition: all 0.2s;
+}
+
+.file-label:active {
+    transform: scale(0.98);
+    background-color: #f8f9fa;
+}
+
+.slider-container {
+    margin-bottom: 5px;
+}
+
+.slider-container label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 5px;
+}
+
+input[type=range] {
+    width: 100%;
+    accent-color: #0056b8;
+}
+
+.loading-text {
+    text-align: center;
+    color: #0056b8;
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
+/* --- RESULTS & INTERACTIVE AREA --- */
+.result-header {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.count-number {
+    color: #0056b8;
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.instruction-text {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-top: -5px;
+}
+
+/* --- IMAGE DISPLAY (STANDARDIZED) --- */
+.image-wrapper {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border: 1px solid #eee;
+    background-color: #333; /* Dark bg for better contrast */
+    text-align: center; /* Centers the image block */
+    padding: 10px;
+}
+
+.interactive-area {
+    position: relative;
+    display: inline-block; /* Shrinks to fit image width */
+    line-height: 0;
+    cursor: crosshair;
+    max-height: 60vh; /* Limits height to 60% of screen */
+}
+
+.main-image {
+    display: block;
+    max-width: 100%;
+    max-height: 60vh; /* Ensures image doesn't get too tall */
+    width: auto;
+    height: auto;
+    user-select: none;
+}
+
+/* --- THE MARKERS (Circles) --- */
+.marker-circle {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    /* Background color is now handled dynamically in JS */
+    border: 2px solid white;
+    border-radius: 50%;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    pointer-events: none;
+}
