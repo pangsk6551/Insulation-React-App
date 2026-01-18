@@ -1,20 +1,200 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
-import './App.css'; // This connects your CSS file!
+
+// --- CSS STYLES (INTEGRATED) ---
+const cssStyles = `
+  /* --- GLOBAL RESET --- */
+  body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+  }
+
+  .app-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background: white;
+    min-height: 100vh;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+  }
+
+  /* --- SUPERLON HEADER BRANDING --- */
+  .header-section {
+      text-align: center;
+      margin-bottom: 25px;
+  }
+
+  .superlon-logo {
+      font-family: "Arial Black", Arial, sans-serif;
+      font-style: italic;
+      font-weight: 900;
+      font-size: 2.5rem;
+      color: #0056b8;
+      margin: 0;
+      line-height: 1;
+      letter-spacing: -1px;
+  }
+
+  .reg-mark {
+      font-family: Arial, sans-serif;
+      font-style: normal;
+      font-size: 1rem;
+      vertical-align: top;
+      margin-left: 8px;
+  }
+
+  .header-line {
+      width: 60%;
+      height: 1px;
+      background-color: #e0e0e0;
+      margin: 8px auto;
+  }
+
+  .subtitle {
+      font-family: Arial, sans-serif;
+      color: #0056b8;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin: 0;
+      letter-spacing: 1px;
+  }
+
+  /* --- CONTROLS --- */
+  .control-card {
+      background: #f1f5f9;
+      padding: 20px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+  }
+
+  .file-input {
+      display: none;
+  }
+
+  .file-label {
+      display: block;
+      text-align: center;
+      background: white;
+      padding: 12px;
+      border: 1px dashed #0056b8;
+      color: #0056b8;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 15px;
+      transition: all 0.2s;
+  }
+
+  .file-label:active {
+      transform: scale(0.98);
+      background-color: #f8f9fa;
+  }
+
+  .slider-container {
+      margin-bottom: 12px;
+  }
+
+  .slider-container label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #64748b;
+      margin-bottom: 5px;
+  }
+
+  input[type=range] {
+      width: 100%;
+      accent-color: #0056b8;
+  }
+
+  .loading-text {
+      text-align: center;
+      color: #0056b8;
+      font-weight: bold;
+      margin-top: 10px;
+      font-size: 0.9rem;
+  }
+
+  /* --- RESULTS & INTERACTIVE AREA --- */
+  .result-header {
+      text-align: center;
+      margin-bottom: 10px;
+  }
+
+  .count-number {
+      color: #0056b8;
+      font-size: 2rem;
+      font-weight: 800;
+  }
+
+  .instruction-text {
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-top: -5px;
+  }
+
+  /* --- IMAGE DISPLAY (STANDARDIZED) --- */
+  .image-wrapper {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      border: 1px solid #eee;
+      background-color: #333;
+      text-align: center;
+      padding: 10px;
+  }
+
+  .interactive-area {
+      position: relative;
+      display: inline-block;
+      line-height: 0;
+      cursor: crosshair;
+      max-height: 60vh;
+  }
+
+  .main-image {
+      display: block;
+      max-width: 100%;
+      max-height: 60vh;
+      width: auto;
+      height: auto;
+      user-select: none;
+  }
+
+  /* --- THE MARKERS (Circles) --- */
+  .marker-circle {
+      position: absolute;
+      border: 2px solid white;
+      border-radius: 50%;
+      color: white;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      pointer-events: none;
+      /* Width, Height, BG Color, and Font Size set dynamically in JS */
+  }
+`;
 
 function App() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [markers, setMarkers] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [sensitivity, setSensitivity] = useState(50); // Start at 50
+  const [sensitivity, setSensitivity] = useState(50);
+  const [markerSize, setMarkerSize] = useState(24); // NEW: Circle size state
 
   const imgRef = useRef(null);
 
-  // YOUR HUGGING FACE BRAIN ADDRESS
   const API_URL = "https://pangsk6551-insulation-api.hf.space/detect";
 
-  // --- COLOR PALETTE FOR GROUPS OF 20 ---
   const markerColors = [
       "rgba(34, 197, 94, 0.9)",   // 1-20: Green
       "rgba(59, 130, 246, 0.9)",  // 21-40: Blue
@@ -26,7 +206,6 @@ function App() {
       "rgba(234, 179, 8, 0.9)"    // 141-160: Yellow
   ];
 
-  // Reusable function to perform the counting
   const performCount = async (fileToCount, sensValue) => {
     if (!fileToCount) return;
 
@@ -45,8 +224,8 @@ function App() {
          const naturalHeight = img.naturalHeight;
 
          const newMarkers = response.data.points.map(pt => ({
-           x: (pt.x / naturalWidth) * 100,
-           y: (pt.y / naturalHeight) * 100
+            x: (pt.x / naturalWidth) * 100,
+            y: (pt.y / naturalHeight) * 100
          }));
          setMarkers(newMarkers);
       } else {
@@ -56,12 +235,12 @@ function App() {
              const nw = retryImg.naturalWidth;
              const nh = retryImg.naturalHeight;
              const retryMarkers = response.data.points.map(pt => ({
-               x: (pt.x / nw) * 100,
-               y: (pt.y / nh) * 100
+                x: (pt.x / nw) * 100,
+                y: (pt.y / nh) * 100
              }));
              setMarkers(retryMarkers);
            }
-        }, 100);
+        }, 150);
       }
 
     } catch (error) {
@@ -77,12 +256,10 @@ function App() {
       setSelectedFile(file);
       setPreview(URL.createObjectURL(file));
       setMarkers([]);
-      // Auto-run immediately upon selection
       performCount(file, sensitivity);
     }
   };
 
-  // Trigger re-count when user finishes dragging slider (if file exists)
   const handleSensitivityChange = (e) => {
       setSensitivity(e.target.value);
   }
@@ -103,7 +280,9 @@ function App() {
     const xPercent = (clickX / rect.width) * 100;
     const yPercent = (clickY / rect.height) * 100;
 
-    const hitThreshold = 3;
+    // Hit threshold adjusts based on marker size (converted to relative % approx)
+    const hitThreshold = (markerSize / rect.width) * 100 * 1.2;
+
     const hitIndex = markers.findIndex(m => {
         const dist = Math.sqrt(Math.pow(m.x - xPercent, 2) + Math.pow(m.y - yPercent, 2));
         return dist < hitThreshold;
@@ -120,6 +299,8 @@ function App() {
 
   return (
     <div className="app-container">
+      <style>{cssStyles}</style>
+
       {/* --- BRANDING HEADER --- */}
       <div className="header-section">
         <h1 className="superlon-logo">
@@ -143,8 +324,19 @@ function App() {
             min="10" max="80"
             value={sensitivity}
             onChange={handleSensitivityChange}
-            onMouseUp={handleSensitivityCommit} // Desktop
-            onTouchEnd={handleSensitivityCommit} // Mobile
+            onMouseUp={handleSensitivityCommit}
+            onTouchEnd={handleSensitivityCommit}
+          />
+        </div>
+
+        {/* NEW: Circle Size Slider */}
+        <div className="slider-container">
+          <label>Circle Size: {markerSize}px</label>
+          <input
+            type="range"
+            min="10" max="50"
+            value={markerSize}
+            onChange={(e) => setMarkerSize(parseInt(e.target.value))}
           />
         </div>
 
@@ -172,7 +364,6 @@ function App() {
 
             {/* Render Circles with Numbers */}
             {markers.map((pt, i) => {
-              // Calculate color group based on index (0-19, 20-39, etc.)
               const colorIndex = Math.floor(i / 20) % markerColors.length;
               return (
                   <div
@@ -181,6 +372,9 @@ function App() {
                     style={{
                       left: `${pt.x}%`,
                       top: `${pt.y}%`,
+                      width: `${markerSize}px`,
+                      height: `${markerSize}px`,
+                      fontSize: `${markerSize * 0.5}px`, // Font scales with circle
                       backgroundColor: markerColors[colorIndex]
                     }}
                   >
